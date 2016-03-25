@@ -33,11 +33,11 @@ def main():
   with open(outputfile, 'w') as f_out:
     with open(inputfile, 'rU') as f_in:
       reader = csv.DictReader(f_in, dialect="excel")
-      writer = csv.DictWriter(f_out, reader.fieldnames + ["autoparsed", "parsed_address", "parsed_w_city", "parsed_w_state", "parsed_w_county_and_state"], encoding="utf8")
+      writer = csv.DictWriter(f_out, reader.fieldnames + ["parsed_address", "parsed_w_city", "parsed_w_state", "parsed_w_county_and_state"], encoding="utf8")
       writer.writeheader()
       n = 0
       for row in reader:
-        offloctn = row["offloctn"].lower().replace("n/b", "").replace("e/b", "").replace("s/b", "").replace("w/b", "").replace("nb ", "").replace("eb ", "").replace("sb ", "").replace("wb ", "").replace(" nb", "").replace(" eb", "").replace(" sb", "").replace(" wb", "").replace("/", "&").replace("@", "&").replace(" from ", "&").replace(" at ", "&").replace("&&", "&")
+        offloctn = row["offloctn"].lower().replace("n/b", "").replace("e/b", "").replace("s/b", "").replace("w/b", "").replace("nb ", "").replace("eb ", "").replace("sb ", "").replace("wb ", "").replace(" nb", "").replace(" eb", "").replace(" sb", "").replace(" wb", "").replace("(", "").replace(")", "").replace("/", "&").replace("@", "&").replace(" from ", "&").replace(" at ", "&").replace("&&", "&")
 #        print offloctn
         addr = ""
         for loc in offloctn.split("&"):
