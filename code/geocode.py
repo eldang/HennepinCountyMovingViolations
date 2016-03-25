@@ -83,26 +83,26 @@ def main():
       ]
       
       for geolocator in geolocators:
-        if n_attempted % geolocator["rate"] != 1:
-          pass
-        
-        location, source, reason, string = geocoderecord([geolocator["geocoder"]], strings, verbosity)
+        if n_attempted % geolocator["rate"] == 1:
+          location, source, reason, string = geocoderecord([geolocator["geocoder"]], strings, verbosity)
 
-        if location is not None:
-          geolocator["n_geocoded"] +=1
-          row["latitude"] = location.latitude
-          row["longitude"] = location.longitude
-          row["geocoded_string"] = string
-        else:
-          row["latitude"] = ""
-          row["longitude"] = ""
-          row["geocoded_string"] = ""
-#            print "No result found by", geolocator["name"], "for", row["offloctn"], "/", row["parsed_address"]
-#            print reason
+          if location is not None:
+            geolocator["n_geocoded"] +=1
+            row["latitude"] = location.latitude
+            row["longitude"] = location.longitude
+            row["geocoded_string"] = string
+          else:
+            row["latitude"] = ""
+            row["longitude"] = ""
+            row["geocoded_string"] = ""
+  #            print "No result found by", geolocator["name"], "for", row["offloctn"], "/", row["parsed_address"]
+  #            print reason
 
-        geolocator["writer"].writerow(row)
-        if geolocator["n_geocoded"] % 100 == 0:
-          print_with_timestamp(geolocator["name"] + " geocoded " + str(geolocator["n_geocoded"]) + " of " + str(n_attempted) + " addresses attempted so far.")
+          geolocator["writer"].writerow(row)
+          if geolocator["n_geocoded"] % 100 == 0:
+            print_with_timestamp(geolocator["name"] + " geocoded " + str(geolocator["n_geocoded"]) + " of " + str(n_attempted) + " addresses attempted so far.")
+
+          time.sleep(0.3)
       
     for geolocator in geolocators:
       geolocator["outfile"].close()
