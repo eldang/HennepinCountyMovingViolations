@@ -44,7 +44,7 @@ def main():
             if token[0] not in (u'hennepin county', u'minnesota', u'usa'):
               if token[1] in (u'suburb', u'city'):
                 addr = addr + ", "
-              addr = addr + token[0]
+              addr = addr + token[0] + " "
 #          print parse_address(loc + ", Hennepin County, Minnesota, USA")
 #          print addr
         row["parsed_address"] = addr + ", Hennepin County, Minnesota, USA"
