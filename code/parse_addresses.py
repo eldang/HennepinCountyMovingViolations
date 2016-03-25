@@ -34,7 +34,7 @@ def main():
       writer.writeheader()
       n = 0
       for row in reader:
-        offloctn = row["offloctn"].replace("/", "&").replace("@", "&")
+        offloctn = row["offloctn"].lower().replace("n/b", "northbound").replace("e/b", "eastbound").replace("s/b", "southbound").replace("w/b", "westbound").replace("/", "&").replace("@", "&")
 #        print offloctn
         addr = ""
         for loc in offloctn.split("&"):
