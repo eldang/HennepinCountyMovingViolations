@@ -26,7 +26,7 @@ def main():
   
   inputfile = "../Hennepin County Moving Violations 2010-2015.csv"
 
-  outputfile = inputfile[:-4] + "_expanded_addresses.csv"
+  outputfile = inputfile[:-4] + "_regularised_addresses.csv"
   with open(outputfile, 'w') as f_out:
     with open(inputfile, 'rU') as f_in:
       reader = csv.DictReader(f_in, dialect="excel")
@@ -34,9 +34,21 @@ def main():
       writer.writeheader()
       n = 0
       for row in reader:
-        addr = row["offloctn"].replace("&", " & ").replace("/", " & ").replace("@", " & ")
-        addr = addr + ", Hennepin County, Minnesota, USA"
-        row["parsed_address"] = prettify_address(addr)
+        offloctn = row["offloctn"].replace("/", "&").replace("@", "&")
+#        print offloctn
+        addr = ""
+        for loc in offloctn.split("&"):
+          if addr != "":
+            addr = addr + " & "
+          for token in parse_address(loc + ", Hennepin County, Minnesota, USA"):
+            if token[0] not in (u'hennepin county', u'minnesota', u'usa'):
+              if token[1] in (u'suburb', u'city'):
+                addr = addr + ", "
+              addr = addr + token[0]
+#          print parse_address(loc + ", Hennepin County, Minnesota, USA")
+#          print addr
+        row["parsed_address"] = addr + ", Hennepin County, Minnesota, USA"
+#        print row["parsed_address"]
         writer.writerow(row)
         n = n + 1
         if n % 5000 == 0:
@@ -47,7 +59,9 @@ def main():
 
 
 def prettify_address(address):
+  print expand_address(address)
   parts = parse_address(expand_address(address)[0])
+  print parts
   prettified = ""
   for part in parts:
     prettified = prettified + part[0] + ", "
