@@ -4,3 +4,9 @@ code/geocoder_keys.py
 *.pyc
 
 Hennepin County Moving Violations 2010-2015_regularised_addresses.csv
+
+geocoded_google.csv
+
+geocoded_mapzen.csv
+
+geocoded_nominatim.csv

@@ -52,6 +52,12 @@ def main():
       "geocoder": Nominatim(),
       "outfile": open("../geocoded_nominatim.csv", 'w'),
       "n_geocoded": 0
+    },
+    {
+      "name": "Google",
+      "geocoder": GoogleV3(api_key=geocoder_keys.googlekey),
+      "outfile": open("../geocoded_google.csv", 'w'),
+      "n_geocoded": 0
     }
   ]
   
@@ -74,23 +80,24 @@ def main():
       ]
       
       for geolocator in geolocators:
-        location, source, reason, string = geocoderecord([geolocator["geocoder"]], strings, verbosity)
+        if geolocator["name"] != "Google" or n_attempted % 350 == 1:
+          location, source, reason, string = geocoderecord([geolocator["geocoder"]], strings, verbosity)
 
-        if location is not None:
-          geolocator["n_geocoded"] +=1
-          row["latitude"] = location.latitude
-          row["longitude"] = location.longitude
-          row["geocoded_string"] = string
-        else:
-          row["latitude"] = ""
-          row["longitude"] = ""
-          row["geocoded_string"] = ""
-          print "No result found by", geolocator["name"], "for", row["offloctn"], "/", row["parsed_address"]
-          print reason
+          if location is not None:
+            geolocator["n_geocoded"] +=1
+            row["latitude"] = location.latitude
+            row["longitude"] = location.longitude
+            row["geocoded_string"] = string
+          else:
+            row["latitude"] = ""
+            row["longitude"] = ""
+            row["geocoded_string"] = ""
+#            print "No result found by", geolocator["name"], "for", row["offloctn"], "/", row["parsed_address"]
+#            print reason
 
-        geolocator["writer"].writerow(row)
-        if geolocator["n_geocoded"] % 100 == 0:
-          print_with_timestamp(geolocator["name"] + " geocoded " + str(geolocator["n_geocoded"]) + " of " + str(n_attempted) + " addresses attempted so far.")
+          geolocator["writer"].writerow(row)
+          if geolocator["n_geocoded"] % 100 == 0:
+            print_with_timestamp(geolocator["name"] + " geocoded " + str(geolocator["n_geocoded"]) + " of " + str(n_attempted) + " addresses attempted so far.")
       
     for geolocator in geolocators:
       geolocator["outfile"].close()
