@@ -30,7 +30,7 @@ def main():
   with open(outputfile, 'w') as f_out:
     with open(inputfile, 'rU') as f_in:
       reader = csv.DictReader(f_in, dialect="excel")
-      writer = csv.DictWriter(f_out, reader.fieldnames + ["parsed_address", "parsed_w_state", "parsed_w_county_and_state"], encoding="utf8")
+      writer = csv.DictWriter(f_out, reader.fieldnames + ["parsed_address", "parsed_w_city", "parsed_w_state", "parsed_w_county_and_state"], encoding="utf8")
       writer.writeheader()
       n = 0
       for row in reader:
@@ -48,6 +48,7 @@ def main():
 #          print parse_address(loc + ", Hennepin County, Minnesota, USA")
 #          print addr
         row["parsed_address"] = addr
+        row["parsed_w_city"] = addr + "Minneapolis, Minnesota, USA"
         row["parsed_w_state"] = addr + ", Minnesota, USA"
         row["parsed_w_county_and_state"] = addr + ", Hennepin County, Minnesota, USA"
 #        print row["parsed_address"]
