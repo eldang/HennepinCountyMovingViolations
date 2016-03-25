@@ -30,7 +30,7 @@ def main():
   with open(outputfile, 'w') as f_out:
     with open(inputfile, 'rU') as f_in:
       reader = csv.DictReader(f_in, dialect="excel")
-      writer = csv.DictWriter(f_out, reader.fieldnames + ["parsed_address"], encoding="utf8")
+      writer = csv.DictWriter(f_out, reader.fieldnames + ["parsed_address", "parsed_w_state", "parsed_w_county_and_state"], encoding="utf8")
       writer.writeheader()
       n = 0
       for row in reader:
@@ -47,11 +47,13 @@ def main():
               addr = addr + token[0] + " "
 #          print parse_address(loc + ", Hennepin County, Minnesota, USA")
 #          print addr
-        row["parsed_address"] = addr + ", Hennepin County, Minnesota, USA"
+        row["parsed_address"] = addr
+        row["parsed_w_state"] = addr + ", Minnesota, USA"
+        row["parsed_w_county_and_state"] = addr + ", Hennepin County, Minnesota, USA"
 #        print row["parsed_address"]
         writer.writerow(row)
         n = n + 1
-        if n % 5000 == 0:
+        if n % 10000 == 0:
           print_with_timestamp("Wrote " + str(n) + " rows so far.")
 
   print_with_timestamp("Run complete.")
